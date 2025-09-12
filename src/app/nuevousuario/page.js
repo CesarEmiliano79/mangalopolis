@@ -14,6 +14,7 @@ export default function Page() {
         setMessage('');
 
         try {
+            console.log('Creando Usuario...');
             const response = await fetch('/api/crearUsuario', {
                 method: 'POST',
                 headers: {

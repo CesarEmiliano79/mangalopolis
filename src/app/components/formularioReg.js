@@ -39,9 +39,8 @@ export default function LoginForm() {
       if (data.success) {
         // Guardar usuario en localStorage o contexto
         localStorage.setItem('user', JSON.stringify(data.data.user));
-        
-        // Redirigir al dashboard
-        router.push('/');
+
+        router.push('/review');
       } else {
         setError(data.error);
       }
