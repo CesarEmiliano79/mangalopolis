@@ -19,14 +19,10 @@ async function dbConnect() {
   }
 
   if (!cached.promise) {
-    const opts = {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    };
 
     console.log('Estableciendo nueva conexion ...');
     
-    cached.promise = MongoClient.connect(MONGODB_URI, opts)
+    cached.promise = MongoClient.connect(MONGODB_URI)
       .then((client) => {
         console.log('Conexion exitosa');
         cached.client = client;
