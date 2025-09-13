@@ -33,7 +33,7 @@ export async function POST(request) {
     const nuevaReview = {
       titulo: body.titulo.trim(),
       opinion: body.opinion.trim(),
-      nombre: body.nombre?.trim() || 'Anónimo',
+      nombre: body.nombre || 'Anónimo',
       publicado: new Date(),
       calificacion: body.calificacion || null,
       categorias: body.categorias || [],

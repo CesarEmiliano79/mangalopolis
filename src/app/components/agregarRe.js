@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export default function CrearReview({ onAddItem }) {
+export default function CrearReview({ onAddItem, user }) {
   const [formData, setFormData] = useState({
     titulo: '',
     opinion: '',
@@ -91,7 +91,7 @@ export default function CrearReview({ onAddItem }) {
       onAddItem({
         titulo: formData.titulo.trim(),
         opinion: formData.opinion.trim(),
-        nombre: formData.nombre.trim() || 'Anónimo',
+        nombre: user || 'Anónimo',
         calificacion: parseInt(formData.calificacion),
         categorias: formData.categorias
       });
@@ -153,22 +153,6 @@ export default function CrearReview({ onAddItem }) {
         {errors.opinion && (
           <p className="text-red-500 text-sm mt-1">{errors.opinion}</p>
         )}
-      </div>
-
-      {/* Nombre (opcional) */}
-      <div className="mb-4">
-        <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-1">
-          Tu nombre (opcional)
-        </label>
-        <input
-          type="text"
-          id="nombre"
-          name="nombre"
-          value={formData.nombre}
-          onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Cómo quieres que te llamemos"
-        />
       </div>
 
       {/* Calificación */}

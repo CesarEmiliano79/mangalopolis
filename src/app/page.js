@@ -26,6 +26,11 @@ export default function Home() {
                 Comenzar ahora
               </button>
             </Link>
+            <Link href="/review">
+              <button className="bg-blue-200 hover:bg-white text-blue-500 font-semibold py-3 px-8 rounded-lg shadow-lg">
+                Explora
+              </button>
+            </Link>
           </div>
         </div>
       </div>
