@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '../context/Autenticacion';
+import { useAuth } from '../../lib/context/Autenticacion';
 import LayoutConSesion from './LayoutConSesion';
 import LayoutSinSesion from './LayoutSinSesion';
 

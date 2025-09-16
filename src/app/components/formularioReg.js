@@ -26,7 +26,7 @@ export default function LoginForm() {
     setError('');
 
     try {
-      const response = await fetch('/api/registro', {
+      const respuestaUsuario = await fetch('/api/registro', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,13 +34,27 @@ export default function LoginForm() {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
+      const datosUsuario = await respuestaUsuario.json();
 
-      if (data.success) {
+      const respuestaAdmin = await fetch('/api/registroAdmin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const datosAdmin = await respuestaAdmin.json();
+
+      if (datosUsuario.success) {
         // Guardar usuario en localStorage o contexto
-        localStorage.setItem('user', JSON.stringify(data.data.user));
+        localStorage.clear();
+        localStorage.setItem('user', JSON.stringify(datosUsuario.data.user));
 
         router.push('/review');
+      } else if(datosAdmin.success){
+        localStorage.clear();
+        router.push('/revision');
       } else {
         setError(data.error);
       }

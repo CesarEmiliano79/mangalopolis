@@ -1,6 +1,6 @@
 'use client'
 
-import CrearUsuario from "../components/formularioNue";
+import CrearUsuario from "../../components/formularioNue";
 import { useState } from 'react';
 
 export default function Page() {

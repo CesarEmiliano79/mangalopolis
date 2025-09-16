@@ -1,12 +1,10 @@
 'use client';
+import { useState, useEffect } from "react";
 
-import { useState } from "react";
-
-export default function ListaRe({ reviews , onDeleteReview}) {
+export default function ListaRe({ reviews, onDeleteReview }) {
   const [query, setQuery] = useState("");
-
-  const reviewsData = reviews?.data || [];
-  const isLoading = !reviews; // o reviews === undefined/null
+  const [reviewsData, setReviewsData] = useState(reviews?.data || []);
+  const isLoading = !reviews;
 
   if (isLoading) {
     return (
@@ -34,27 +32,25 @@ export default function ListaRe({ reviews , onDeleteReview}) {
     );
   }
 
+  // Usar reviewsData en lugar de reviews.data
   const filteredReviews = reviewsData.filter((review) => {
     const { titulo, opinion, nombre, categorias, calificacion } = review;
-    const texto = `
-      ${titulo} ${opinion} ${nombre} ${categorias?.join(" ")} ${calificacion}
-    `.toLowerCase();
+    const texto = `${titulo} ${opinion} ${nombre} ${categorias?.join(" ")} ${calificacion}`.toLowerCase();
     return texto.includes(query.toLowerCase());
   });
   
   const handleDelete = async (id) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar este item?')) {
       try {
-        const response = await fetch('/admin/api/registro', {
+        const response = await fetch('/api/registroAdmin', {
           method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id }),
         });
-        
+
         if (response.ok) {
-          onDeleteReview && onDeleteReview(id);
+          // Filtrar y actualizar lista local
+          setReviewsData((prev) => prev.filter((review) => review._id !== id));
         }
       } catch (error) {
         console.error('Error deleting item:', error);

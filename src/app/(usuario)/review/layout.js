@@ -1,5 +1,5 @@
-import { AutenticacionUsuario } from "../context/Autenticacion";
-import LayoutPrincipal from "../components/LayoutPrincipal";
+import { AutenticacionUsuario } from "../../../lib/context/Autenticacion";
+import LayoutPrincipal from "../../components/LayoutPrincipal";
 
 export const metadata = {
   title: 'Mangalopolis',

@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '../context/Autenticacion';
-import ListaRe from "../components/listadoRe";
-import CrearReview from '../components/agregarRe';
+import { useAuth } from '../../../lib/context/Autenticacion';
+import ListaRe from "../../components/listadoRe";
+import CrearReview from '../../components/agregarRe';
 
 export default function Page() {
   const { user, loading1 } = useAuth();

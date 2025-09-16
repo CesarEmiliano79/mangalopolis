@@ -1,5 +1,4 @@
-import LoginForm from '../components/formularioReg'; // este puede ser tu formulario de login
-
+import LoginForm from "@/app/components/formularioReg";
 export default function Page() {
 
   return (
