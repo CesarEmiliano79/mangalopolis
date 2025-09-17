@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
+import dbConnect from '@/app/(backend)/lib/mongodb';
 
 // POST - Crear nueva review (este está bien)
 export async function POST(request) {

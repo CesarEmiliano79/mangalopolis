@@ -1,4 +1,4 @@
-import LoginForm from "@/app/components/formularioReg";
+import LoginForm from "@/app/(backend)/components/formularioReg";
 export default function Page() {
 
   return (

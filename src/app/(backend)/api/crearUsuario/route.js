@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
+import dbConnect from '@/app/(backend)/lib/mongodb';
 
 // POST - Crear nuevo usuario
 export async function POST(request) {

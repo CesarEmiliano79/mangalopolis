@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import ListaRe from '@/app/(administrador)/components/ListadoAdmin';
+import ListaRe from '@/app/(backend)/components/ListadoAdmin';
 
 export default function Page() {
   const [reviews, setReview] = useState([]);
