@@ -56,7 +56,7 @@ export default function LoginForm() {
         localStorage.clear();
         router.push('/revision');
       } else {
-        setError(data.error);
+        setError('Usuario no registrado');
       }
     } catch (error) {
       setError('Error de conexión');

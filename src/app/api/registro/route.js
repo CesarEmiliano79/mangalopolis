@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
+import bcrypt from 'bcryptjs';
 
 export async function POST(request) {
   try {
@@ -36,9 +37,9 @@ export async function POST(request) {
       );
     }
 
-    // TEMPORAL: Comparar contraseña sin bcrypt
-    // (Reemplazar esto luego con bcrypt.compare)
-    if (password !== user.password) {
+    const comparacion = await bcrypt.compare(password, user.password)
+
+    if (!comparacion) {
       return NextResponse.json(
         { 
           success: false, 
