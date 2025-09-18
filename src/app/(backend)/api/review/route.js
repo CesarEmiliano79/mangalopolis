@@ -66,10 +66,9 @@ export async function POST(request) {
   }
 }
 
-// GET - Obtener todas las reviews (CÓDIGO CORREGIDO)
+// GET - Obtener todas las reviews
 export async function GET(request) {
   try {
-    console.log('Hola luisillo');
     const db = await dbConnect();
     
     // Obtener parámetros de consulta

@@ -173,7 +173,7 @@ export default function ListaRe({ reviews, onDeleteReview }) {
             ))
           ) : (
             <li className="px-6 py-8 text-center text-gray-500">
-              No se encontraron resultados para "{query}"
+              {`No se encontraron resultados para "${query}"`}
             </li>
           )}
         </ul>
