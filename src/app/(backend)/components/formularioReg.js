@@ -48,12 +48,10 @@ export default function LoginForm() {
 
       if (datosUsuario.success) {
         // Guardar usuario en localStorage o contexto
-        localStorage.clear();
-        localStorage.setItem('user', JSON.stringify(datosUsuario.data.user));
-
+       
         router.push('/review');
       } else if(datosAdmin.success){
-        localStorage.clear();
+
         router.push('/revision');
       } else {
         setError('Usuario no registrado');

@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
+import jwt from 'jsonwebtoken';
 
 const Autenticacion = createContext();
 
@@ -9,22 +10,35 @@ export function AutenticacionUsuario({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Verificar localStorage al cargar
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-    setLoading(false);
+    const fetchUser = async () => {
+      try {
+        const res = await fetch('/api/cookie', { method: 'GET' }); // <-- Invoca el endpoint
+        const data = await res.json();
+
+        if (data.user) {
+          setUser(data.user); // El usuario viene desde el JWT en la cookie
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error('Error obteniendo usuario:', error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUser();
   }, []);
 
-  const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
+  const login = (token) => {
+    const decoded = jwt.decode(token);
+    setUser(decoded.user);
+    // No guardamos el token en localStorage, ya está en cookie HttpOnly
   };
 
-  const logout = () => {
+  const logout = async () => {
     setUser(null);
-    localStorage.removeItem('user');
+    await fetch('/api/cookie', { method: 'POST' }); // borra cookie en backend
   };
 
   return (
@@ -36,8 +50,6 @@ export function AutenticacionUsuario({ children }) {
 
 export const useAuth = () => {
   const context = useContext(Autenticacion);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };
