@@ -5,7 +5,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 export async function GET(request) {
   try {
-    const token = request.cookies.get('tokenUsuario')?.value;
+    const token = request.cookies.get('tokenSesion')?.value;
 
     if (!token) {
       return NextResponse.json({ user: null });
@@ -23,6 +23,6 @@ export async function GET(request) {
 
 export async function POST() {
   const response = NextResponse.json({ success: true });
-  response.cookies.set('authToken', '', { maxAge: 0, path: '/' });
+  response.cookies.set('tokenSesion', '', { maxAge: 0, path: '/' });
   return response;
 }
