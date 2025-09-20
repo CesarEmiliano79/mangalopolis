@@ -1,9 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import { useAuthAdmin } from '@/app/(backend)/lib/contextAdmin/AutenticacionAdmin';
 import ListaRe from '@/app/(backend)/components/ListadoAdmin';
 
 export default function Page() {
+  const { admin, loading1 } = useAuthAdmin();
   const [reviews, setReview] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -34,12 +36,30 @@ export default function Page() {
     );
   }
 
+  if (loading1) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex justify-center items-center h-64">
+          <p className="text-lg text-gray-600">Cargando...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-100 to-blue-100 flex items-center justify-center">
-      <div className="max-w-md mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Reviews Recientes</h1>
-        <ListaRe reviews={reviews} onUpdate = {fetchItems}/>
-      </div>
+      <>
+        {admin ? (
+          <div className="max-w-md mx-auto px-4 py-8">
+            <h1 className="text-3xl font-bold text-gray-800 mb-6">Reviews Recientes</h1>
+            <ListaRe reviews={reviews} onUpdate = {fetchItems}/>
+          </div>
+        ) : (
+          <div className="max-w-md mx-auto px-4 py-8">
+            <p>Pagina no valida para tu tipo de sesion</p>
+          </div>
+        )}
+      </>
     </div>
   );
 }

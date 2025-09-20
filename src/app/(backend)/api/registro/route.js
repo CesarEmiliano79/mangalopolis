@@ -17,11 +17,9 @@ export function generarToken(usuario){
 export async function POST(request) {
   try {
     const db = await dbConnect();
-    
-    // Obtener datos del body
+
     const { email, password } = await request.json();
 
-    // Validaciones básicas
     if (!email || !password) {
       return NextResponse.json(
         { 
@@ -32,13 +30,11 @@ export async function POST(request) {
       );
     }
 
-    // Buscar usuario por email
     const user = await db.collection('usuario')
       .findOne({ 
         email: email.toLowerCase().trim() 
       });
 
-    // Verificar si el usuario existe
     if (!user) {
       return NextResponse.json(
         { 
@@ -67,6 +63,11 @@ export async function POST(request) {
     // Remover password de la respuesta por seguridad
     const { password: _, ...userWithoutPassword } = user;
 
+    const response = NextResponse.json({
+      success: true,
+      user: userWithoutPassword
+    });
+
     // Establecer cookie HTTP-only para mayor seguridad
     response.cookies.set('tokenSesion', token, {
       httpOnly: true,
@@ -76,7 +77,6 @@ export async function POST(request) {
       path: '/'
     });
 
-    console.log(user);
     return response
 
   } catch (error) {

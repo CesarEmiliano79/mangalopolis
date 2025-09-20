@@ -15,7 +15,7 @@ export default function Page() {
 
         try {
             console.log('Creando Usuario...');
-            const response = await fetch('/api/crearUsuario', {
+            const response = await fetch('/api/crearAdmin', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ export default function Page() {
                 
                 // Opcional: redirigir al login después de éxito
                 setTimeout(() => {
-                    window.location.href = '/registro';
+                    window.location.href = '/revision';
                 }, 2000);
                 
             } else {
@@ -58,10 +58,7 @@ export default function Page() {
             <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
                 <div className="px-6 py-8">
                     <div className="text-center mb-6">
-                        <h1 className="text-3xl font-bold text-gray-900">Registro de Usuario</h1>
-                        <p className="mt-2 text-sm text-gray-600">
-                            Únete a nuestra comunidad y comparte tus ideas
-                        </p>
+                        <h1 className="text-3xl font-bold text-gray-900">Registro de Admin</h1>
                     </div>
                     
                     {/* Mensajes de estado */}

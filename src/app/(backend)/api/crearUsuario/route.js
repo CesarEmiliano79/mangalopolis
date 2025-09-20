@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/app/(backend)/lib/mongodb';
+import isDisposable from '../../lib/validar/Email';
 
 // POST - Crear nuevo usuario
 export async function POST(request) {
@@ -18,6 +19,13 @@ export async function POST(request) {
     if (body.password.length < 6) {
       return NextResponse.json(
         { success: false, error: 'La contraseña debe tener al menos 6 caracteres' },
+        { status: 400 }
+      );
+    }
+
+    if (await isDisposable(body.email)) {
+      return NextResponse.json(
+        { success: false, error: 'Email no permitido' },
         { status: 400 }
       );
     }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/app/(backend)/lib/mongodb';
+import isDisposable from '../../lib/validar/Email';
 
 // POST - Crear nuevo usuario
 export async function POST(request) {
@@ -22,7 +23,12 @@ export async function POST(request) {
       );
     }
 
-    
+    if (await isDisposable(body.email)) {
+      return NextResponse.json(
+        { success: false, error: 'Email no permitido' },
+        { status: 400 }
+      );
+    }
 
     // Verificar si el usuario ya existe
     const usuarioExistente = await db.collection('admin')
@@ -43,7 +49,7 @@ export async function POST(request) {
       createdAt: new Date(),
     };
 
-    const result = await db.collection('admin').insertOne(nuevoUsuario);
+    const result = await db.collection('admin').insertOne(nuevoAdmin);
     
     // Obtener usuario sin password
     const usuarioCreado = await db.collection('admin')
