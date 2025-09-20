@@ -67,25 +67,13 @@ export async function POST(request) {
     // Remover password de la respuesta por seguridad
     const { password: _, ...userWithoutPassword } = user;
 
-    // Configurar cookie con el token (opcional)
-    const response = NextResponse.json(
-      { 
-        success: true, 
-        data: {
-          user: userWithoutPassword,
-          token,
-          message: 'Login exitoso'
-        }
-      },
-      { status: 200 }
-    );
-
     // Establecer cookie HTTP-only para mayor seguridad
-    response.cookies.set('tokenUsuario', token, {
+    response.cookies.set('tokenSesion', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production'? true : false,
+      secure: false,
       sameSite: 'strict',
-      maxAge: 60 * 60
+      maxAge: 60 * 60,
+      path: '/'
     });
 
     console.log(user);
