@@ -1,7 +1,6 @@
 'use client';
 
 import { useState,useEffect } from 'react';
-import bcrypt from 'bcryptjs'
 
 
 
@@ -66,12 +65,11 @@ export default function CrearAdmin({ onAddUser}) {
     e.preventDefault();
     
     if (validateForm()) {
-      const contraHasheada = await bcrypt.hash(contrasena,10)
       onAddUser({ 
         name: nombre.trim(),     
         edad: parseInt(edad), 
         email: email.trim(),    
-        password: contraHasheada,
+        password: contrasena,
         creadoPor: admin  
       });
     }
