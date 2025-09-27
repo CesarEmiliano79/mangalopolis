@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/app/(backend)/lib/mongodb';
 import isDisposable from '../../lib/validar/Email';
+import { validateContra, validateEmail, validateUser } from '../../lib/validar/sanitizar';
+import { hashearPassword } from '../../lib/seguridad/encriptar';
 
 // POST - Crear nuevo usuario
 export async function POST(request) {
@@ -15,15 +17,32 @@ export async function POST(request) {
         { status: 400 }
       );
     }
-
-    if (body.password.length < 6) {
+    if (!body.name) {
       return NextResponse.json(
-        { success: false, error: 'La contraseña debe tener al menos 6 caracteres' },
+        { success: false, error: 'El nombre es requerido' },
         { status: 400 }
       );
     }
 
-    if (await isDisposable(body.email)) {
+    // Validar email
+    const emailValidado = validateEmail(body.email);
+    if (emailValidado instanceof NextResponse) return emailValidado;
+
+    // Validar nombre
+    const nameValidado = validateUser(body.name);
+    if (nameValidado instanceof NextResponse) return nameValidado;
+
+    // Validar contraseña
+    const passwordValidada = validateContra(body.password);
+    if (passwordValidada instanceof NextResponse) return passwordValidada;
+
+    // Hashear contraseña
+    const pswHasheada = await hashearPassword(passwordValidada);
+
+
+
+    // Verificar si el email es desechable
+    if (await isDisposable(emailValidado)) {
       return NextResponse.json(
         { success: false, error: 'Email no permitido' },
         { status: 400 }
@@ -31,8 +50,7 @@ export async function POST(request) {
     }
 
     // Verificar si el usuario ya existe
-    const usuarioExistente = await db.collection('admin')
-      .findOne({ email: body.email.toLowerCase().trim() });
+    const usuarioExistente = await db.collection('admin').findOne({ email: body.email.toLowerCase().trim() });
 
     if (usuarioExistente) {
       return NextResponse.json(
@@ -43,9 +61,9 @@ export async function POST(request) {
 
     // Crear nuevo usuario
     const nuevoAdmin = {
-      name: body.name?.trim() || '',
-      email: body.email.toLowerCase().trim(),
-      password: body.password,
+      name: nameValidado,
+      email: emailValidado.toLowerCase().trim(),
+      password: pswHasheada,
       createdAt: new Date(),
     };
 

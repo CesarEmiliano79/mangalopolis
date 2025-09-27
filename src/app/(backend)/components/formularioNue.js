@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import bcrypt from 'bcryptjs'
 
 export default function CrearUsuario({ onAddUser }) {
   const [nombre, setNombre] = useState('');
@@ -41,12 +40,11 @@ export default function CrearUsuario({ onAddUser }) {
     e.preventDefault();
     
     if (validateForm()) {
-      const contraHasheada = await bcrypt.hash(contrasena,10)
       onAddUser({ 
         name: nombre.trim(),       // ← La API espera "name" no "nombre"
         edad: parseInt(edad),      // ← Convertir a número
         email: email.trim(),       // ← La API espera "email"
-        password: contraHasheada       // ← La API espera "password" no "contrasena"
+        password: contrasena      // ← La API espera "password" no "contrasena"
       });
     }
   };

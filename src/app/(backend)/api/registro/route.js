@@ -2,7 +2,9 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/app/(backend)/lib/mongodb';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-
+import isDisposable from '../../lib/validar/Email';
+import { validateEmail } from '../../lib/validar/sanitizar';
+import {hashearPassword, verificarPassword} from '../../lib/seguridad/encriptar';
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export function generarToken(usuario){  
@@ -29,7 +31,15 @@ export async function POST(request) {
         { status: 400 }
       );
     }
+    const emailValidado = validateEmail(email);
+    if (emailValidado instanceof NextResponse) return emailValidado;
 
+    if (await isDisposable(emailValidado)) {
+      return NextResponse.json(
+        { success: false, error: "Email no permitido" },
+        { status: 400 }
+      );
+    }
     const user = await db.collection('usuario')
       .findOne({ 
         email: email.toLowerCase().trim() 
@@ -44,8 +54,10 @@ export async function POST(request) {
         { status: 401 }
       );
     }
+    
 
-    const comparacion = await bcrypt.compare(password, user.password)
+    const pswHasheada = await hashearPassword(password);
+    const comparacion = await verificarPassword(password, pswHasheada);
 
     if (!comparacion) {
       return NextResponse.json(
