@@ -1,10 +1,13 @@
 'use client'
 
-import CrearUsuario from "../../../(backend)/components/formularioNue";
-import { useState } from 'react';
+import Link from "next/link";
+import CrearAdmin from "../../../(backend)/components/FormularioNueAdmin";
+import { useState, useEffect } from 'react';
+import { useAuthAdmin } from '@/app/(backend)/lib/contextAdmin/AutenticacionAdmin';
 
 export default function Page() {
     const [loading, setLoading] = useState(false);
+    const { admin, loading1 } = useAuthAdmin();
     const [connectionStatus, setConnectionStatus] = useState('idle');
     const [message, setMessage] = useState('');
 
@@ -53,29 +56,54 @@ export default function Page() {
         }
     };
 
+    if (loading1) {
+        return (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="flex justify-center items-center h-64">
+            <p className="text-lg text-gray-600">Cargando...</p>
+            </div>
+        </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+                
                 <div className="px-6 py-8">
                     <div className="text-center mb-6">
                         <h1 className="text-3xl font-bold text-gray-900">Registro de Admin</h1>
                     </div>
-                    
-                    {/* Mensajes de estado */}
-                    {message && (
-                        <div className={`mb-4 p-3 rounded text-center ${
-                            connectionStatus === 'success' 
-                                ? 'bg-green-100 border border-green-400 text-green-700' 
-                                : 'bg-red-100 border border-red-400 text-red-700'
-                        }`}>
-                            {message}
+                    <>
+                    {admin ? (
+                        <div>
+                            {/* Mensajes de estado */}
+                            {message && (
+                                <div className={`mb-4 p-3 rounded text-center ${
+                                    connectionStatus === 'success' 
+                                        ? 'bg-green-100 border border-green-400 text-green-700' 
+                                        : 'bg-red-100 border border-red-400 text-red-700'
+                                }`}>
+                                    {message}
+                                </div>
+                            )}
+                            
+                            <CrearAdmin 
+                                onAddUser={handleAddItem} 
+                                loading={loading}
+                            />
+                        </div>
+                    ):(
+                        <div className="max-w-md mx-auto px-4 py-8">
+                            <p>Pagina no valida para tu tipo de sesion</p>
+                            <Link href="/registro">
+                                <button className="bg-pink-500 hover:bg-pink-700 text-white font-semibold py-3 px-8 rounded-lg shadow-lg">
+                                    Regresar
+                                </button>
+                            </Link>
                         </div>
                     )}
-                    
-                    <CrearUsuario 
-                        onAddUser={handleAddItem} 
-                        loading={loading}
-                    />
+                    </>
                 </div>
             </div>
         </div>

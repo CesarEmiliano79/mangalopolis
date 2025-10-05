@@ -1,14 +1,58 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/app/(backend)/lib/mongodb';
 import isDisposable from '../../lib/validar/Email';
+import jwt from 'jsonwebtoken';
+
+const SECRET = process.env.JWT_SECRET;
+
+async function verificarAdmin(request) {
+  const authHeader = request.headers.get('Authorization');
+  if (!authHeader) return false;
+
+  const token = authHeader.split(' ')[1];
+  if (!token) return false;
+
+  try {
+    const decoded = jwt.verify(token, SECRET);
+    return decoded.role === 'admin';
+  } catch (err) {
+    return false;
+  }
+}
 
 // POST - Crear nuevo usuario
 export async function POST(request) {
+
+  const esAdmin = await verificarAdmin(request);
+  if (!esAdmin) {
+    return NextResponse.json(
+      { success: false, error: 'No autorizado' },
+      { status: 401 }
+    );
+  }
+
   try {
     const db = await dbConnect();
     const body = await request.json();
-    
+
     // Validaciones
+    if (
+      !body || 
+      typeof body.email !== 'string' || 
+      typeof body.password !== 'string'
+    ){
+      return NextResponse.json(
+        {success: false, error: 'Error en los parametros'}
+      );
+    }
+
+    if (body.name && typeof body.name !== 'string') {
+      return NextResponse.json(
+        { success: false, error: 'El nombre debe ser un string' },
+        { status: 400 }
+      );
+    }
+
     if (!body.email || !body.password) {
       return NextResponse.json(
         { success: false, error: 'Email y password son requeridos' },
@@ -47,6 +91,7 @@ export async function POST(request) {
       email: body.email.toLowerCase().trim(),
       password: body.password,
       createdAt: new Date(),
+      role: 'Admin'
     };
 
     const result = await db.collection('admin').insertOne(nuevoAdmin);
