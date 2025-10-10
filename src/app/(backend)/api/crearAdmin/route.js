@@ -63,7 +63,7 @@ export async function POST(request) {
       );
     }
 
-    if (await isDisposable(body.email) || await !valido(body.email)) {
+    if (await isDisposable(body.email) || !(await valido(body.email))) {
       return NextResponse.json(
         { success: false, error: 'Email no permitido' },
         { status: 400 }
