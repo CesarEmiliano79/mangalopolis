@@ -87,7 +87,7 @@ export async function POST(request) {
       email: body.email.toLowerCase().trim(),
       password: body.password,
       createdAt: new Date(),
-      role: 'Admin'
+      role: 'admin'
     };
 
     const result = await db.collection('admin').insertOne(nuevoAdmin);
