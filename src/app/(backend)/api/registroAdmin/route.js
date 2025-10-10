@@ -5,6 +5,17 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+async function verificarAdmin(request) {
+  try {
+    const token = request.cookies.get('tokenSesion')?.value; // Obtener header
+    const decoded = jwt.verify(token, JWT_SECRET);
+    return decoded.admin && decoded.admin.role === 'admin';
+  } catch (err) {
+    console.log("No se pudo verificar el token:", err.message);
+    return false;
+  }
+}
+
 export function generarToken(admin){  
   const { _id,email,password,createdAt,updatedAt, ...nombre } = admin;
   return jwt.sign(
@@ -86,6 +97,49 @@ export async function POST(request) {
         success: false, 
         error: 'Error interno del servidor' 
       },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request) {
+  try {
+    const esAdmin = await verificarAdmin(request);
+    if (!esAdmin) {
+      return NextResponse.json(
+        { success: false, error: 'No autorizado' },
+        { status: 401 }
+      );
+    }
+    const db = await dbConnect();
+    const { id } = await request.json();
+
+    if (!id) {
+      return NextResponse.json(
+        { success: false, error: 'Falta proporcionar id' },
+        { status: 400 }
+      );
+    }
+
+    const result = await db.collection('reviews').deleteOne({
+      _id: new ObjectId(id),
+    });
+
+    if (result.deletedCount === 0) {
+      return NextResponse.json(
+        { success: false, error: 'Item no encontrado' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Item eliminado correctamente',
+    });
+  } catch (error) {
+    console.error('DELETE Error:', error);
+    return NextResponse.json(
+      { success: false, error: error.message },
       { status: 500 }
     );
   }

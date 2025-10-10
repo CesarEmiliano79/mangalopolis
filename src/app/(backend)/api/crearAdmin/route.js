@@ -18,16 +18,14 @@ async function verificarAdmin(request) {
 
 // POST - Crear nuevo usuario
 export async function POST(request) {
-
-  const esAdmin = await verificarAdmin(request);
-  if (!esAdmin) {
-    return NextResponse.json(
-      { success: false, error: 'No autorizado' },
-      { status: 401 }
-    );
-  }
-
   try {
+    const esAdmin = await verificarAdmin(request);
+    if (!esAdmin) {
+      return NextResponse.json(
+        { success: false, error: 'No autorizado' },
+        { status: 401 }
+      );
+    }
     const db = await dbConnect();
     const body = await request.json();
 
