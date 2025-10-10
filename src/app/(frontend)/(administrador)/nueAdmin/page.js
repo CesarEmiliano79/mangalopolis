@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link";
-import CrearAdmin from "../../../(backend)/components/FormularioNueAdmin";
+import CrearUsuario from "../../../(backend)/components/formularioNue";
 import { useState, useEffect } from 'react';
 import { useAuthAdmin } from '@/app/(backend)/lib/contextAdmin/AutenticacionAdmin';
 
@@ -74,7 +74,6 @@ export default function Page() {
                     <div className="text-center mb-6">
                         <h1 className="text-3xl font-bold text-gray-900">Registro de Admin</h1>
                     </div>
-                    <>
                     {admin ? (
                         <div>
                             {/* Mensajes de estado */}
@@ -88,7 +87,7 @@ export default function Page() {
                                 </div>
                             )}
                             
-                            <CrearAdmin 
+                            <CrearUsuario
                                 onAddUser={handleAddItem} 
                                 loading={loading}
                             />
@@ -103,7 +102,6 @@ export default function Page() {
                             </Link>
                         </div>
                     )}
-                    </>
                 </div>
             </div>
         </div>

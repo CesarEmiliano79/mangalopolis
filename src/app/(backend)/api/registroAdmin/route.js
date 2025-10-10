@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/app/(backend)/lib/mongodb';
-import { ObjectId } from 'mongodb';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -87,42 +86,6 @@ export async function POST(request) {
         success: false, 
         error: 'Error interno del servidor' 
       },
-      { status: 500 }
-    );
-  }
-}
-
-export async function DELETE(request) {
-  try {
-    const db = await dbConnect();
-    const { id } = await request.json();
-
-    if (!id) {
-      return NextResponse.json(
-        { success: false, error: 'Falta proporcionar id' },
-        { status: 400 }
-      );
-    }
-
-    const result = await db.collection('reviews').deleteOne({
-      _id: new ObjectId(id),
-    });
-
-    if (result.deletedCount === 0) {
-      return NextResponse.json(
-        { success: false, error: 'Item no encontrado' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: 'Item eliminado correctamente',
-    });
-  } catch (error) {
-    console.error('DELETE Error:', error);
-    return NextResponse.json(
-      { success: false, error: error.message },
       { status: 500 }
     );
   }

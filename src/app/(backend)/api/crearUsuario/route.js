@@ -1,35 +1,11 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/app/(backend)/lib/mongodb';
-import isDisposable from '../../lib/validar/Email';
-import jwt from 'jsonwebtoken';
+import {isDisposable, valido} from '../../lib/validar/Email';
 
 const SECRET = process.env.JWT_SECRET;
 
-async function verificarAdmin(request) {
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader) return false;
-
-  const token = authHeader.split(' ')[1];
-  if (!token) return false;
-
-  try {
-    const decoded = jwt.verify(token, SECRET);
-    return decoded.role === 'admin';
-  } catch (err) {
-    return false;
-  }
-}
-
 // POST - Crear nuevo usuario
 export async function POST(request) {
-  const esAdmin = await verificarAdmin(request);
-  if (!esAdmin) {
-    return NextResponse.json(
-      { success: false, error: 'No autorizado' },
-      { status: 401 }
-    );
-  }
-
   try {
     const db = await dbConnect();
     const body = await request.json();
@@ -67,7 +43,7 @@ export async function POST(request) {
       );
     }
 
-    if (await isDisposable(body.email)) {
+    if (await isDisposable(body.email) || !(await valido(body.email))) {
       return NextResponse.json(
         { success: false, error: 'Email no permitido' },
         { status: 400 }
@@ -91,7 +67,6 @@ export async function POST(request) {
       email: body.email.toLowerCase().trim(),
       password: body.password,
       createdAt: new Date(),
-      updatedAt: new Date(),
       role: 'otakufan' // El rol de usuario es otakufan
     };
 

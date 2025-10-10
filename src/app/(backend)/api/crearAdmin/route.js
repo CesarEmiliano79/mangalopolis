@@ -1,21 +1,17 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/app/(backend)/lib/mongodb';
-import isDisposable from '../../lib/validar/Email';
+import {isDisposable, valido} from '../../lib/validar/Email';
 import jwt from 'jsonwebtoken';
 
-const SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 async function verificarAdmin(request) {
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader) return false;
-
-  const token = authHeader.split(' ')[1];
-  if (!token) return false;
-
   try {
-    const decoded = jwt.verify(token, SECRET);
-    return decoded.role === 'admin';
+    const token = request.cookies.get('tokenSesion')?.value; // Obtener header
+    const decoded = jwt.verify(token, JWT_SECRET);
+    return decoded.admin && decoded.admin.role === 'admin';
   } catch (err) {
+    console.log("No se pudo verificar el token:", err.message);
     return false;
   }
 }
@@ -67,12 +63,14 @@ export async function POST(request) {
       );
     }
 
-    if (await isDisposable(body.email)) {
+    if (await isDisposable(body.email) || await !valido(body.email)) {
       return NextResponse.json(
         { success: false, error: 'Email no permitido' },
         { status: 400 }
       );
     }
+
+
 
     // Verificar si el usuario ya existe
     const usuarioExistente = await db.collection('admin')
