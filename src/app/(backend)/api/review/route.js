@@ -2,11 +2,13 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/app/(backend)/lib/mongodb';
 import jwt from 'jsonwebtoken';
 
+const JWT_SECRET = process.env.JWT_SECRET;
+
 async function verificarUsuario(request) {
   try {
     const token = request.cookies.get('tokenSesion')?.value;
-    const decoded = jwt.verify(token, SECRET);
-    return decoded.role === 'otakufan';
+    const decoded = jwt.verify(token, JWT_SECRET);
+    return decoded.user.role === 'otakufan';
   } catch (err) {
     return false;
   }
@@ -17,6 +19,7 @@ export async function POST(request) {
 
   const sesionActiva = await verificarUsuario(request);
   if (!sesionActiva) {
+    console.log("No se pudo");
     return NextResponse.json(
       { success: false, error: 'No autorizado' },
       { status: 401 }
@@ -29,6 +32,7 @@ export async function POST(request) {
     
     // Validaciones
     if (!body.titulo || !body.opinion) {
+      console.log("No se pudo 1");
       return NextResponse.json(
         { 
           success: false, 
@@ -39,6 +43,7 @@ export async function POST(request) {
     }
 
     if (!body.nombre){
+      console.log("No se pudo2");
       return NextResponse.json(
         { 
           success: false, 
@@ -50,6 +55,7 @@ export async function POST(request) {
 
     // Validar calificación si existe
     if (body.calificacion && (body.calificacion < 1 || body.calificacion > 5) && typeof body.calificacion !=='number') {
+      console.log("No se pudo3");
       return NextResponse.json(
         { 
           success: false, 
@@ -60,6 +66,7 @@ export async function POST(request) {
     }
 
     if (!body){
+      console.log("No se pudo4");
       return NextResponse.json(
         { 
           success: false, 
@@ -73,6 +80,7 @@ export async function POST(request) {
       typeof body.opinion !== 'string' ||
       typeof body.nombre !== 'string'
     ){
+      console.log("No se pudo5");
       return NextResponse.json(
         { 
           success: false, 
@@ -83,10 +91,11 @@ export async function POST(request) {
     }
 
     if (
-      !Array.isArray(body.tags) ||                  // No es un array
-      body.tags.length === 0 ||                     // Está vacío
-      !body.tags.every(item => typeof item === "string" && item.trim() !== "") // Contiene elementos no string o vacíos
+      !Array.isArray(body.categorias) ||                  // No es un array
+      body.categorias.length === 0 ||                     // Está vacío
+      !body.categorias.every(item => typeof item === "string" && item.trim() !== "") // Contiene elementos no string o vacíos
     ) {
+      console.log("No se pudo6");
       return NextResponse.json(
         {
           success: false,

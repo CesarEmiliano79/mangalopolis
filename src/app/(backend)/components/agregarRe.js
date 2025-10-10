@@ -92,7 +92,7 @@ export default function CrearReview({ onAddItem, user }) {
         titulo: formData.titulo.trim(),
         opinion: formData.opinion.trim(),
         nombre: user || 'Anónimo',
-        calificacion: parseInt(formData.calificacion),
+        calificacion: parseInt(formData.calificacion, 10),
         categorias: formData.categorias
       });
       
@@ -110,7 +110,6 @@ export default function CrearReview({ onAddItem, user }) {
   return (
     <form onSubmit={handleSubmit} className="bg-white shadow rounded-lg p-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">Agregar Nueva Review</h2>
-      
       {/* Título de la obra */}
       <div className="mb-4">
         <label htmlFor="titulo" className="block text-sm font-medium text-gray-700 mb-1">

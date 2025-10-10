@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import CrearUsuario from "../../../(backend)/components/formularioNue";
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import { useAuthAdmin } from '@/app/(backend)/lib/contextAdmin/AutenticacionAdmin';
 
 export default function Page() {

@@ -35,7 +35,6 @@ export default function Page() {
                     setConnectionStatus('idle');
                 }, 3000);
                 
-                // Opcional: redirigir al login después de éxito
                 setTimeout(() => {
                     window.location.href = '/registro';
                 }, 2000);

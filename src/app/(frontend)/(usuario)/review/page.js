@@ -30,14 +30,13 @@ export default function Page() {
     try {
       const response = await fetch('/api/review', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // <--- importante
         body: JSON.stringify(newItem),
       });
-      
+
       if (response.ok) {
-        fetchItems(); // Recargar los items
+        fetchItems();
       }
     } catch (error) {
       console.error('Error adding item:', error);
@@ -72,6 +71,7 @@ export default function Page() {
       </div>
       <>
         {user ? (
+          
           <div>
             <CrearReview onAddItem={handleAddItem} user={user.name} />
           </div>
