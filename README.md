@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Mangalopolis, la red social de los otakus
 
-## Getting Started
+Este proyecto para la clase de seguridad informatica del ciclo 2026-I utiliza NEXT.JS para una pagina web
 
-First, run the development server:
+El repositorio es publico, por lo que se puede clonar
+Instalacion
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/CesarEmiliano79/mangalopolis
+cd mangalopolis
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Una vez descargado el proyecto, iniciar el archivo start.js, para ingresar una clave de MongoDB y una firma para el JWT_SECRET
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```bash
+node start.js
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Puesta en produccion
 
-## Learn More
+Para poner en produccion ingresar los siguientes comandos
 
-To learn more about Next.js, take a look at the following resources:
+Para descargar dependencias
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm i
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Para preparar el codigo
 
-## Deploy on Vercel
+```bash
+npm run build
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Para mandar a produccion
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run start
+```
+
+Una vez inicializado, se accede por http://localhost:3000 o con la ip asignada por NEXT.JS por el puerto 3000
